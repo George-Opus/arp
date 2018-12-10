@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+#cat oui.txt | grep $(arpd -l | awk -F" " '{ print $3}' | cut -d ":" -f -3 | sed 's/://g' | tr '[:lower:]' '[:upper:]' | tail -n 6 | head -n1)
+test=$(arpd -l | awk -F" " '{print $3}' | sed 's/ /\//g' | cut -d ":" -f -3 | grep ':' |sed 's/://g' | tr '[:lower:]' '[:upper:]')
+j=2
+for i in $test
+do
+	name=$(cat oui.txt | grep $i | awk -F" " '{print $4,$NF}')
+	arpd -l | head -n $j | tail -n1 | tr "\n$" "\    "
+	echo "	$name"
+#	echo $arp $name
+	j=$(($j+1))
+done
+
+
