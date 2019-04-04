@@ -3,12 +3,13 @@
 
 #cat oui.txt | grep $(arpd -l | awk -F" " '{ print $3}' | cut -d ":" -f -3 | sed 's/://g' | tr '[:lower:]' '[:upper:]' | tail -n 6 | head -n1)
 #test=$(arpd -l | awk -F" " '{print $3}' | sed 's/ /\//g' | cut -d ":" -f -3 | grep ':' |sed 's/://g' | tr '[:lower:]' '[:upper:]')
+arp=$(arp | awk '{print $3}' | awk -F':' '{print toupper($1$2$3)}')
 test=$(arpd -l | grep : |awk -F" " '{print $NF;}' |awk -F":" '{print toupper($1$2$3)}')
 j=2
-for i in $test
+for i in $arp
 do
 	name=$(cat oui.txt | grep $i | awk -F" " '{print $4,$NF}')
-	arpd -l | head -n $j | tail -n1 | tr "\n$" "\    "
+	arp | head -n $j | tail -n1 | tr "\n$" "\    "
 	echo "	$name"
 	#echo $arp $name
 	j=$(($j+1))
